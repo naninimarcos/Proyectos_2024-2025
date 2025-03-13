@@ -1,5 +1,18 @@
-# Proyectos_2024-2025
-Durante el año 2024 trabaje mucho con Powerbi dentro de mi trabajo, los mismo no tienen datos publicos pero introduzco en la carpeta de BI algunas imagenes de referencia con datos no sensibles
-Trabajo con Python algunos proyectos para obtener datos, trabajando con tecnicas de web-scrapping, para poder tomar datos de una base en Ciudadano digital (plataforma del gobierno) y asi trabajar con datos que no estan disponibles sus tablas origenes pero que si tenemos acceso a los datos, de esa manera capto los datos y los paso a una base de datos para poder ser analizados.
-Trabajo con PowerApps,Powerautomate flujos de trabajo para la app donde + de 40 inspectores realizan actas, el mismo esta explicado en su apartado 
-Trabajo con python para una presentacion en la facultad (economia internacional)
+# Proyectos 2024-2025  
+
+Este repositorio reúne algunos de los proyectos en los que trabajé durante 2024 y 2025, abarcando visualización de datos, automatización de procesos y análisis con Python.  
+
+## 📊 Visualización de Datos 
+Durante 2024 trabajé con **Power BI** para la creación de reportes y tableros dentro de mi entorno laboral. Si bien los datos utilizados no son públicos, en la carpeta `BI` incluyo algunas imágenes de referencia con información no sensible.  
+
+## 🐍 Extracción y Análisis de Datos con Python  
+Desarrollé scripts en **Python** para obtener datos a través de **web scraping**, específicamente desde **Ciudadano Digital** (plataforma del gobierno). Como las tablas originales no están disponibles pero los datos sí pueden consultarse, utilizo scraping para capturarlos y almacenarlos en una base de datos para su análisis.  
+
+## ⚙️ Automatización con PowerApps y Power Automate  
+Implementé flujos de trabajo con **PowerApps** y **Power Automate** para una aplicación utilizada por más de **40 inspectores** en la generación de actas. En el repositorio incluyo detalles sobre su funcionamiento.  
+
+## 📚 Presentación en Economía Internacional  
+Utilicé **Python** para preparar análisis y visualizaciones como parte de una presentación en la facultad sobre **Economía Internacional**.  
+
+---  
+Este repositorio incluye materiales de referencia y documentación de los proyectos.  
