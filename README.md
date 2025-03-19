@@ -10,7 +10,7 @@
 
 <p align="center">
      🧙‍♂️&nbsp; Mi linkedink <a href="https://best-of.org">best-of lists</a> or create <a href="https://github.com/best-of-lists/best-of/blob/main/create-best-of-list.md">your own</a>.<br>
-    📫&nbsp; para comunicarse conmigo <a hrefmarcos.nanini@mi.unc.edu.ar">="marcos.nanini@mi.unc.edu.ar</a> y para ver mi Curriculum Vitae (CV.
+    📫&nbsp; para comunicarse conmigo <a href="marcos.nanini@mi.unc.edu.ar">marcos.nanini@mi.unc.edu.ar</a> y para ver mi Curriculum Vitae (CV) <a href="https://github.com/naninimarcos/Proyectos_2024-2025/blob/main/CV">.
 </p>
 
 
