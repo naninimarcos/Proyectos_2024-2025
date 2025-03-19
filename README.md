@@ -9,10 +9,7 @@
 </p>
 
 <p align="center">
-    <a href="https://www.linkedin.com/in/marcosnanini/" title="Linkedin"><img src="https://www.linkedin.com/in/marcosnanini/"></a>
-    <a href="#Contents" title="Project Count"><img src="https://img.shields.io/badge/projects-920-blue.svg?color=5ac4bf"></a>
-    <a href="https://github.com/ml-tooling/best-of-ml-python/releases" title="Best-of Updates"><img src="https://img.shields.io/github/release-date/ml-tooling/best-of-ml-python?color=green&label=updated"></a>
-    <a href="https://mltooling.substack.com/subscribe" title="Subscribe to newsletter"><img src="http://bit.ly/2Md9rxM"></a>
+    <a href="https://www.linkedin.com/in/marcosnanini/" title="Linkedin"><img src="[https://www.linkedin.com/in/marcosnanini/](https://img.shields.io/badge/projects-920-blue.svg?color=5ac4bf)"></a>
 </p>
 
 
