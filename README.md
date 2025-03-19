@@ -9,8 +9,8 @@
 </p>
 
 <p align="center">
-     🧙‍♂️&nbsp; Mi linkedink <a href="https://www.linkedin.com/in/marcosnanini/">
-    📫&nbsp; para comunicarse conmigo <a href="marcos.nanini@mi.unc.edu.ar">marcos.nanini@mi.unc.edu.ar</a> y para ver mi Curriculum Vitae (CV) <a href="https://github.com/naninimarcos/Proyectos_2024-2025/blob/main/CV">.
+     🧙‍♂️&nbsp;  <a href="https://www.linkedin.com/in/marcosnanini/"> Linkedin
+    📫&nbsp; para comunicarse conmigo <a href="marcos.nanini@mi.unc.edu.ar"> marcos.nanini@mi.unc.edu.ar</a> y para ver mi <a href="https://github.com/naninimarcos/Proyectos_2024-2025/blob/main/CV"> Curriculum Vitae (CV)
 </p>
 
 
