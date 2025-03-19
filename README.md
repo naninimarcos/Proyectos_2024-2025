@@ -9,8 +9,8 @@
 </p>
 
 <p align="center">
-     🧙‍♂️&nbsp; Discover other <a href="https://best-of.org">best-of lists</a> or create <a href="https://github.com/best-of-lists/best-of/blob/main/create-best-of-list.md">your own</a>.<br>
-    📫&nbsp; Subscribe to our <a href="https://mltooling.substack.com/subscribe">newsletter</a> for updates and trending projects.
+     🧙‍♂️&nbsp; Mi linkedink <a href="https://best-of.org">best-of lists</a> or create <a href="https://github.com/best-of-lists/best-of/blob/main/create-best-of-list.md">your own</a>.<br>
+    📫&nbsp; para comunicarse conmigo <a href="marcos.nanini@mi.unc.edu.a">newsletter</a> y para ver mi Curriculum Vitae (CV.
 </p>
 
 
