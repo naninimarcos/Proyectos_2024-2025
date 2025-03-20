@@ -5,7 +5,7 @@
 </h1>
 
 <p align="center">
-    <strong>🏆&nbsp; Licenciado en economìa.</strong>
+    <strong>🏆&nbsp; Licenciado en economía.</strong>
 </p>
 
 <p align="center">
