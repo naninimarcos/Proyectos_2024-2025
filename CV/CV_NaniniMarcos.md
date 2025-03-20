@@ -1,4 +1,4 @@
-pandoc CV_NaniniMarcos.tex -o CV_NaniniMarcos.md
+pandoc CV_NaniniMarcos.tex
 
 \documentclass[a4paper,10pt]{article}
 \usepackage[left=2cm, right=2cm, top=2cm, bottom=2cm]{geometry}
