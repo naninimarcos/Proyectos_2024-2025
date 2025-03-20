@@ -10,7 +10,8 @@
 
 <p align="center">
      🧙‍♂️&nbsp;  <a href="https://www.linkedin.com/in/marcosnanini/"> Linkedin</a> <br>
-    📫&nbsp; para comunicarse conmigo <a href="marcos.nanini@mi.unc.edu.ar"> marcos.nanini@mi.unc.edu.ar</a> y para ver mi <a href="https://github.com/naninimarcos/Proyectos_2024-2025/blob/main/CV"> Curriculum Vitae (CV)
+    📫&nbsp; para comunicarse conmigo por el siguiente mail <a href="marcos.nanini@mi.unc.edu.ar"> marcos.nanini@mi.unc.edu.ar</a> <br>
+    Puedes ver mi <a href="https://github.com/naninimarcos/Proyectos_2024-2025/blob/main/CV"> Curriculum Vitae (CV) aqui
 </p>
 
 
