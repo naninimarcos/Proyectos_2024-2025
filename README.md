@@ -5,31 +5,31 @@
 </h1>
 
 <p align="center">
-    <strong>🏆&nbsp; Licenciado en economía.</strong>
+    <strong>🏆&nbsp; Bachelor’s Degree in Economics.</strong>
 </p>
 
 <p align="center">
-     🧙‍♂️&nbsp;  <a href="https://www.linkedin.com/in/marcosnanini/"> Mi Linkedin</a> Ahí subo distintas publicaciones y logros de mi trabajo y estudio <br>
-    📫&nbsp; para comunicarse conmigo por el siguiente mail <a href="marcos.nanini@mi.unc.edu.ar"> marcos.nanini@mi.unc.edu.ar</a> <br>
-    Puedes ver mi <a href="https://github.com/naninimarcos/Proyectos_2024-2025/blob/main/CV"> Curriculum Vitae (CV) aqui
+     🧙‍♂️&nbsp;  <a href="https://www.linkedin.com/in/marcosnanini/"> My LinkedIn</a> Here I post various publications and achievements from my work and studies <br>
+    📫&nbsp; Contact me via email at <a href="marcos.nanini@mi.unc.edu.ar"> marcos.nanini@mi.unc.edu.ar</a> <br>
+    You can view my <a href="https://github.com/naninimarcos/Proyectos_2024-2025/blob/main/CV"> Curriculum Vitae (CV) here
 </p>
 
 
-# Proyectos 2024-2025  
+# Projects 2024-2025  
 
-Este repositorio reúne algunos de los proyectos en los que trabajé durante 2024 y 2025, abarcando visualización de datos, automatización de procesos y análisis con Python.  
+This repository includes some of the projects I worked on during 2024 and 2025, covering data visualization, process automation, and analysis using Python.  
 
-## 📊 Visualización de Datos 
-Durante 2024 trabajé con **Power BI** para la creación de reportes y tableros dentro de mi entorno laboral. Si bien los datos utilizados no son públicos, en la carpeta `BI` incluyo algunas imágenes de referencia con información no sensible.  
+## 📊 Data Visualization 
+During 2024, I worked with **Power BI** to create reports and dashboards within my work environment. Although the data used is not public, I have included some reference images with non-sensitive information in the `BI` folder.  
 
-## 🐍 Extracción y Análisis de Datos con Python  
-Desarrollé scripts en **Python** para obtener datos a través de **web scraping**, específicamente desde **Ciudadano Digital** (plataforma del gobierno). Como las tablas originales no están disponibles pero los datos sí pueden consultarse, utilizo scraping para capturarlos y almacenarlos en una base de datos para su análisis.  
+## 🐍 Data Extraction and Analysis with Python  
+I developed **Python** scripts to extract data through **web scraping**, specifically from **Ciudadano Digital** (a government platform). Since the original tables are not available, but the data can be accessed, I use scraping to capture and store it in a database for analysis.  
 
-## ⚙️ Automatización con PowerApps y Power Automate  
-Implementé flujos de trabajo con **PowerApps** y **Power Automate** para una aplicación utilizada por más de **40 inspectores** en la generación de actas. En el repositorio incluyo detalles sobre su funcionamiento.  
+## ⚙️ Automation with PowerApps and Power Automate  
+I implemented workflows using **PowerApps** and **Power Automate** for an application used by over **40 inspectors** in the generation of reports. The repository includes details about its functionality.  
 
-## 📚 Presentación en Economía Internacional  
-Utilicé **Python** para preparar análisis y visualizaciones como parte de una presentación en la facultad sobre **Economía Internacional**.  
+## 📚 Presentation in International Economics  
+I used **Python** to prepare analyses and visualizations as part of a presentation at the university on **International Economics**.  
 
 ---  
-Este repositorio incluye materiales de referencia y documentación de los proyectos.  
+This repository includes reference materials and documentation for the projects.
