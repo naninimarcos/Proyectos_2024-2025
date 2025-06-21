@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaborative Flashcard Tool</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Default: Dark Theme */
+            --primary-bg: #16213e;
+            --primary-dark: #0f1730;
+            --primary-accent: #1f4287;
+            --accent: #21e6c1;
+            --card-bg: #1e293b;
+            --card-shadow: 0 4px 16px 0 rgba(22, 33, 62, 0.08);
+            --card-hover-shadow: 0 6px 20px 0 rgba(22, 33, 62, 0.12);
+            --border-color: #23305a;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --btn-primary-bg: var(--primary-accent);
+            --btn-primary-text: #fff;
+            --btn-primary-hover-bg: var(--accent);
+            --btn-primary-hover-text: var(--primary-dark);
+            --border-radius: 16px;
+            --header-height: 64px;
+            --sidebar-width: 280px;
+            --transition: 0.18s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        html[data-theme='light'] {
+            --primary-bg: #f1f5f9;
+            --primary-dark: #ffffff;
+            --primary-accent: #3b82f6;
+            --accent: #10b981;
+            --card-bg: #ffffff;
+            --card-shadow: 0 4px 16px 0 rgba(100, 116, 139, 0.12);
+            --card-hover-shadow: 0 6px 20px 0 rgba(100, 116, 139, 0.15);
+            --border-color: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --btn-primary-bg: var(--primary-accent);
+            --btn-primary-text: #fff;
+            --btn-primary-hover-bg: var(--accent);
+            --btn-primary-hover-text: var(--primary-dark);
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+
+        .app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            height: var(--header-height);
+            background: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            box-shadow: 0 2px 8px 0 rgba(22, 33, 62, 0.10);
+            flex-shrink: 0;
+        }
+
+        .logo-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo {
+            color: var(--accent);
+        }
+
+        .app-header h1 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--transition), transform var(--transition);
+            box-shadow: 0 2px 8px 0 rgba(22, 33, 62, 0.08);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .btn-primary {
+            background: var(--btn-primary-bg);
+            color: var(--btn-primary-text);
+        }
+
+        .btn-primary:hover {
+            background: var(--btn-primary-hover-bg);
+            color: var(--btn-primary-hover-text);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn .icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            min-height: 0;
+            background: var(--primary-bg);
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary-dark);
+            padding: 2rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            box-shadow: 2px 0 12px 0 rgba(22, 33, 62, 0.08);
+        }
+
+        .search-section input {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+            background: var(--primary-dark);
+            color: var(--text-primary);
+            box-shadow: 0 1px 4px 0 rgba(22, 33, 62, 0.08);
+            outline: none;
+            transition: box-shadow var(--transition);
+        }
+
+        .search-section input:focus {
+            box-shadow: 0 0 0 2px var(--accent);
+            border-color: var(--accent);
+        }
+
+        .tags-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .tags-section h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .tags-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tags-list button {
+            background: var(--primary-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 999px;
+            padding: 0.3rem 1rem;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition), transform var(--transition);
+        }
+
+        .tags-list button.active,
+        .tags-list button:hover {
+            background: var(--accent);
+            color: var(--btn-primary-hover-text);
+            font-weight: 600;
+            transform: scale(1.05);
+            border-color: var(--accent);
+        }
+
+        #clearTagFiltersBtn {
+            background: none;
+            color: var(--accent);
+            border: none;
+            font-size: 0.9rem;
+            cursor: pointer;
+            align-self: flex-end;
+            text-decoration: underline;
+            padding-top: 0.5rem;
+        }
+
+        .cards-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            align-content: flex-start;
+            min-width: 0;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        .card {
+            display: grid;
+            grid-template-rows: 1fr auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--card-shadow);
+            min-height: 220px;
+            transition: transform var(--transition), box-shadow var(--transition);
+            cursor: grab;
+            position: relative;
+            background: var(--card-bg);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .card.dragging {
+            opacity: 0.5;
+            transform: scale(0.97);
+            box-shadow: none;
+        }
+
+        .card-flipper-container {
+            perspective: 1000px;
+            grid-row: 1 / 2;
+            position: relative;
+            overflow: hidden;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+        .card-flipper {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card.flipped .card-flipper {
+            transform: rotateY(180deg);
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.2rem;
+            font-size: 1.05rem;
+            text-align: center;
+            overflow-wrap: break-word;
+            overflow-y: auto;
+        }
+
+        .card-front {
+            /* Base styles removed, will be applied by template */
+        }
+
+        .card-back {
+            /* Base styles removed, will be applied by template */
+            transform: rotateY(180deg);
+        }
+
+        .card-details {
+            grid-row: 2 / 3;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .card-details .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .card-details .card-tags span {
+            background: var(--primary-bg);
+            color: var(--text-secondary);
+            border-radius: 999px;
+            padding: 0.2rem 0.8rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .card-details .card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .card-details .card-actions .btn-icon {
+            background: none;
+            border: none;
+            padding: 0.25rem;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        .card-details .card-actions .btn-icon:hover {
+            background: var(--primary-bg);
+            color: var(--text-primary);
+        }
+
+        .card-details .card-actions .btn-icon .icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(22, 33, 62, 0.70);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border-radius: var(--border-radius);
+            box-shadow: 0 8px 32px 0 rgba(22, 33, 62, 0.18);
+            padding: 2rem 2.5rem;
+            min-width: 340px;
+            max-width: 520px;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            max-height: calc(100vh - 4rem);
+        }
+
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 1rem;
+            margin-right: -1rem;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .modal-content .close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 99px;
+            display: flex;
+            transition: color var(--transition), background-color var(--transition);
+        }
+
+        .modal-content .close:hover {
+            color: var(--text-primary);
+            background-color: var(--primary-bg);
+        }
+
+        .editor-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .editor-form .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .editor-form label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--primary-accent);
+        }
+
+        .editor-form input[type="text"],
+        .editor-form select {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 1rem;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            outline: none;
+            transition: box-shadow var(--transition), border-color var(--transition);
+        }
+
+        .editor-form input[type="text"]:focus,
+        .editor-form select:focus {
+            box-shadow: 0 0 0 2px rgba(33, 230, 193, 0.5);
+            border-color: var(--accent);
+        }
+
+        .wysiwyg-toolbar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            padding: 0.5rem;
+            border-radius: 8px 8px 0 0;
+            background: var(--primary-bg);
+        }
+
+        .wysiwyg-toolbar button {
+            background: transparent;
+            color: var(--text-secondary);
+            border: none;
+            border-radius: 6px;
+            padding: 0.3rem 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background var(--transition), color var(--transition);
+        }
+
+        .wysiwyg-toolbar button.active,
+        .wysiwyg-toolbar button:hover {
+            background: var(--accent);
+            color: var(--btn-primary-hover-text);
+        }
+
+        .wysiwyg-editor {
+            min-height: 100px;
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border-radius: 0 0 8px 8px;
+            border: 1px solid var(--border-color);
+            padding: 0.7rem 1rem;
+            font-size: 1rem;
+            outline: none;
+            transition: box-shadow var(--transition);
+        }
+
+        .wysiwyg-editor:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(33, 230, 193, 0.5);
+        }
+
+        .live-preview {
+            margin-top: 0.7rem;
+            background: var(--primary-bg);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            padding: 0.7rem 1rem;
+            min-height: 60px;
+            font-size: 1rem;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Drag & Drop Actions */
+        .drag-actions {
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        body.is-dragging .drag-actions {
+            display: flex;
+        }
+
+        .drop-zone {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .drop-zone .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--accent);
+            background: rgba(33, 230, 193, 0.1);
+            color: var(--accent);
+            transform: scale(1.03);
+        }
+
+        /* Confirmation Modal */
+        #confirmModal .modal-content {
+            text-align: center;
+        }
+
+        #confirmModal p {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                border-radius: 0;
+                flex-direction: row;
+                gap: 1rem;
+                padding: 1rem;
+                align-items: center;
+            }
+
+            .cards-grid {
+                padding: 1.5rem;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .app-header {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 0.75rem 1rem;
+                height: auto;
+            }
+
+            .header-actions .btn span {
+                display: none;
+            }
+
+            .header-actions .btn {
+                padding: 0.5rem;
+            }
+
+            .header-actions .btn .icon {
+                width: 20px;
+                height: 20px;
+                margin-right: 0;
+            }
+
+            .main-content {
+                padding: 0;
+            }
+
+            .sidebar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+                min-width: 0;
+                max-width: 95vw;
+            }
+        }
+
+        #themeToggleBtn .icon-moon {
+            display: none;
+        }
+
+        #themeToggleBtn .icon-sun {
+            display: inline-block;
+        }
+
+        html[data-theme='light'] #themeToggleBtn .icon-moon {
+            display: inline-block;
+        }
+
+        html[data-theme='light'] #themeToggleBtn .icon-sun {
+            display: none;
+        }
+
+        /* Card Template Styles */
+        .card[data-template="basic"] .card-front {
+            background: linear-gradient(45deg, #6d28d9, #4f46e5);
+            color: #fff;
+        }
+
+        .card[data-template="basic"] .card-back {
+            background: linear-gradient(135deg, #6d28d9, #4f46e5);
+            color: #fff;
+        }
+
+        .card[data-template="minimal"] .card-front {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card[data-template="minimal"] .card-back {
+            background: var(--primary-bg);
+            color: var(--text-primary);
+        }
+
+        .card[data-template="minimal"] .card-details {
+            background: #fff;
+            color: #475569;
+        }
+
+        .card[data-template="colorful"] .card-front {
+            background: linear-gradient(45deg, #ec4899, #f87171);
+            color: #fff;
+        }
+
+        .card[data-template="colorful"] .card-back {
+            background: linear-gradient(135deg, #ec4899, #f87171);
+            color: #fff;
+        }
+
+        .card[data-template="dark"] .card-front {
+            background: #1e293b;
+            color: #fff;
+        }
+
+        .card[data-template="dark"] .card-back {
+            background: #334155;
+            color: #fff;
+        }
+
+        /* Template Picker */
+        .template-picker {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 1rem;
+        }
+
+        .template-picker label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .template-picker input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .template-picker .template-preview {
+            width: 100%;
+            height: 50px;
+            border-radius: 8px;
+            border: 3px solid transparent;
+            transition: all var(--transition);
+        }
+
+        .template-picker input[type="radio"]:checked+.template-preview {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .template-picker .template-name {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app" class="app-container">
+        <header class="app-header">
+            <div class="logo-title">
+                <span class="logo">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                        <polyline points="2 17 12 22 22 17"></polyline>
+                        <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                </span>
+                <h1>Collaborative Flashcards</h1>
+            </div>
+            <div class="header-actions">
+                <button id="themeToggleBtn" title="Toggle Theme" class="btn btn-primary">
+                    <svg class="icon icon-sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="icon icon-moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </button>
+                <button id="addCardBtn" title="Add New Card" class="btn btn-primary">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span>New Card</span>
+                </button>
+                <button id="importBtn" title="Import from JSON" class="btn btn-primary">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span>Import</span>
+                </button>
+                <button id="exportBtn" title="Export to JSON" class="btn btn-primary">
+                    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>Export</span>
+                </button>
+                <input type="file" id="importFile" accept=".json" style="display:none;">
+            </div>
+        </header>
+        <main class="main-content">
+            <aside class="sidebar">
+                <div class="search-section">
+                    <label for="searchInput" class="sr-only">Search Cards</label>
+                    <input type="text" id="searchInput" placeholder="Search or #tag...">
+                </div>
+                <div class="tags-section">
+                    <h3>Filter by Tags</h3>
+                    <div class="tags-list" id="tagFilterContainer"></div>
+                    <button id="clearTagFiltersBtn" style="display:none;">Clear Filters</button>
+                </div>
+                <div class="drag-actions" id="dragActions">
+                    <div class="drop-zone" id="editDropZone" data-action="edit">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M12 20h9"></path>
+                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                        </svg>
+                        <span>Drop to Edit</span>
+                    </div>
+                    <div class="drop-zone" id="deleteDropZone" data-action="delete">
+                        <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                        </svg>
+                        <span>Drop to Delete</span>
+                    </div>
+                </div>
+            </aside>
+            <section class="cards-grid" id="cardGrid" aria-live="polite">
+                <!-- Cards will be rendered here -->
+            </section>
+        </main>
+
+        <!-- Editor Modal -->
+        <div id="editorModal" class="modal" style="display:none;" role="dialog" aria-modal="true"
+            aria-labelledby="editorTitle">
+            <div class="modal-content">
+                <!-- Editor content will be injected here by JS -->
+            </div>
+        </div>
+
+        <!-- Confirmation Modal -->
+        <div id="confirmModal" class="modal" style="display:none;" role="dialog" aria-modal="true"
+            aria-labelledby="confirmTitle">
+            <div class="modal-content">
+                <h2 id="confirmTitle">Confirm Action</h2>
+                <p id="confirmMessage">Are you sure?</p>
+                <div class="modal-actions">
+                    <button id="confirmCancel" class="btn btn-secondary">Cancel</button>
+                    <button id="confirmOk" class="btn btn-primary">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // ===== FLASHCARD APP - VANILLA JAVASCRIPT =====
+
+        class FlashcardApp {
+            constructor() {
+                this.cards = [];
+                this.currentEditId = null;
+                this.activeFilters = { tags: new Set(), searchTerm: '' };
+                this.draggedElement = null;
+                this.theme = 'dark';
+                this.cardTemplates = {
+                    basic: { name: 'Basic', style: 'background: linear-gradient(45deg, #6d28d9, #4f46e5)' },
+                    minimal: { name: 'Minimal', style: 'background: #fff; border: 1px solid #e2e8f0' },
+                    colorful: { name: 'Colorful', style: 'background: linear-gradient(45deg, #ec4899, #f87171)' },
+                    dark: { name: 'Dark', style: 'background: #1e293b' }
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.initializeTheme();
+                this.loadCards();
+                this.setupEventListeners();
+                this.renderCards();
+                this.updateTagFilters();
+                this.draggedElement = null;
+                document.body.classList.remove('is-dragging');
+            }
+
+            // ===== THEME TOGGLE =====
+            initializeTheme() {
+                const savedTheme = localStorage.getItem('flashcards-theme');
+                const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                this.setTheme(savedTheme || (systemPrefersDark ? 'dark' : 'light'));
+            }
+
+            setTheme(theme) {
+                this.theme = theme;
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('flashcards-theme', theme);
+            }
+
+            // ===== DATA MANAGEMENT =====
+            generateId() {
+                return Date.now().toString(36) + Math.random().toString(36).substr(2);
+            }
+
+            saveCards() {
+                localStorage.setItem('flashcards-pro', JSON.stringify(this.cards));
+            }
+
+            loadCards() {
+                const stored = localStorage.getItem('flashcards-pro');
+                if (stored) {
+                    this.cards = JSON.parse(stored);
+                } else {
+                    // Sample cards
+                    this.cards = [
+                        {
+                            id: this.generateId(),
+                            template: 'default',
+                            frontContent: '<h1>Welcome!</h1><p>This is the front of a card.</p>',
+                            backContent: '<p>And this is the back! Click a card to flip it.</p>',
+                            tags: ['welcome', 'help'],
+                            createdAt: Date.now()
+                        },
+                        {
+                            id: this.generateId(),
+                            template: 'question',
+                            frontContent: '<b>What is the `Range` API in JavaScript?</b>',
+                            backContent: 'The Range interface represents a fragment of a document that can contain nodes and parts of text nodes. It is used for precise selection and manipulation of content in the DOM.',
+                            tags: ['javascript', 'dom-api'],
+                            createdAt: Date.now()
+                        }
+                    ];
+                    this.saveCards();
+                }
+            }
+
+            // ===== TEMPLATING & RENDERING =====
+            renderCards() {
+                const grid = document.getElementById('cardGrid');
+                const filteredCards = this.getFilteredCards();
+
+                if (filteredCards.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #f4f8fb;">
+                            <h3 style="margin-bottom: 1rem;">No cards found</h3>
+                            <p>Try different filters or create a new card</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = filteredCards.map(card => this.createCardHTML(card)).join('');
+                this.setupCardEventListeners();
+            }
+
+            createCardHTML(card, isPreview = false) {
+                const editIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>`;
+                const deleteIcon = `<svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>`;
+
+                const actionsHTML = isPreview ? '' : `
+                    <div class="card-actions">
+                        <button class="btn-icon" title="Edit Card" aria-label="Edit Card" onclick="app.openEditor('${card.id}')">${editIcon}</button>
+                        <button class="btn-icon" title="Delete Card" aria-label="Delete Card" onclick="app.deleteCard('${card.id}')">${deleteIcon}</button>
+                    </div>`;
+
+                return `
+                    <div class="card" data-id="${card.id}" data-template="${card.template}" draggable="${!isPreview}">
+                        <div class="card-flipper-container">
+                            <div class="card-flipper">
+                                <div class="card-front">${card.frontContent}</div>
+                                <div class="card-back">${card.backContent}</div>
+                            </div>
+                        </div>
+                        <div class="card-details">
+                            <div class="card-tags">
+                                ${card.tags.map(tag => `<span>#${tag}</span>`).join('')}
+                            </div>
+                            ${actionsHTML}
+                        </div>
+                    </div>
+                `;
+            }
+
+            setupCardEventListeners() {
+                document.querySelectorAll('.card').forEach(card => {
+                    const flipperContainer = card.querySelector('.card-flipper-container');
+                    if (flipperContainer) {
+                        flipperContainer.addEventListener('click', (e) => {
+                            if (!e.target.closest('.card-actions')) {
+                                card.classList.toggle('flipped');
+                            }
+                        });
+                    }
+
+                    card.addEventListener('dragstart', this.handleDragStart.bind(this));
+                    card.addEventListener('dragover', this.handleDragOver.bind(this));
+                    card.addEventListener('dragleave', this.handleDragLeave.bind(this));
+                    card.addEventListener('drop', this.handleDrop.bind(this));
+                    card.addEventListener('dragend', this.handleDragEnd.bind(this));
+                });
+            }
+
+            // ===== DRAG & DROP =====
+            handleDragStart(e) {
+                if (e.target.classList.contains('card')) {
+                    this.draggedElement = e.target;
+                    e.dataTransfer.effectAllowed = 'move';
+                    e.dataTransfer.setData('text/plain', e.target.dataset.id);
+                    setTimeout(() => e.target.classList.add('dragging'), 0);
+                    document.body.classList.add('is-dragging');
+                }
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                const target = e.target.closest('.card');
+                if (target && target !== this.draggedElement) {
+                    // Add placeholder/highlight styles here if desired
+                }
+            }
+
+            handleDragLeave(e) {
+                // Remove placeholder/highlight styles here
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                const target = e.target.closest('.card');
+                if (!target || target === this.draggedElement) return;
+
+                const draggedId = this.draggedElement.dataset.id;
+                const targetId = target.dataset.id;
+
+                const draggedIndex = this.cards.findIndex(c => c.id === draggedId);
+                const targetIndex = this.cards.findIndex(c => c.id === targetId);
+
+                if (draggedIndex !== -1 && targetIndex !== -1) {
+                    const [draggedCard] = this.cards.splice(draggedIndex, 1);
+                    this.cards.splice(targetIndex, 0, draggedCard);
+                    this.saveCards();
+                    this.renderCards();
+                }
+            }
+
+            handleDragEnd() {
+                if (this.draggedElement) {
+                    this.draggedElement.classList.remove('dragging');
+                }
+                this.draggedElement = null;
+                document.body.classList.remove('is-dragging');
+            }
+
+            // ===== EDITOR MODAL =====
+            openEditor(id = null) {
+                this.currentEditId = id;
+                const card = id ? this.cards.find(c => c.id === id) : null;
+                const modal = document.getElementById('editorModal');
+                const content = modal.querySelector('.modal-content');
+
+                content.innerHTML = this.createEditorHTML(card);
+                modal.style.display = 'flex';
+                this.setupWYSIWYG();
+                this.updateLiveCardPreview();
+            }
+
+            createEditorHTML(card = null) {
+                const isEdit = !!card;
+                const title = isEdit ? 'Edit Card' : 'New Card';
+
+                return `
+                    <h2 id="editorTitle">${title}</h2>
+                    <button class="close" onclick="app.closeEditor()" aria-label="Close Editor">&times;</button>
+                    <div class="modal-body">
+                        <form id="cardEditorForm" class="editor-form" onsubmit="app.saveCard(event)">
+                            <div class="form-group">
+                                <label>Choose Template</label>
+                                <div class="template-picker">
+                                    ${Object.entries(this.cardTemplates).map(([key, template]) => `
+                                        <label>
+                                            <input type="radio" name="template" value="${key}" ${(card?.template || 'basic') === key ? 'checked' : ''}>
+                                            <span class="template-preview" style="${template.style}"></span>
+                                            <span class="template-name">${template.name}</span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="frontEditor">Front Content</label>
+                                ${this.createToolbarHTML('frontEditor')}
+                                <div id="frontEditor" class="wysiwyg-editor" contenteditable="true" role="textbox" aria-multiline="true">${card?.frontContent || ''}</div>
+                                <div class="live-preview" aria-label="Front content live preview"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="backEditor">Back Content</label>
+                                ${this.createToolbarHTML('backEditor')}
+                                <div id="backEditor" class="wysiwyg-editor" contenteditable="true" role="textbox" aria-multiline="true">${card?.backContent || ''}</div>
+                                <div class="live-preview" aria-label="Back content live preview"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="tagsInput">Tags (comma separated)</label>
+                                <input type="text" id="tagsInput" value="${card?.tags?.join(', ') || ''}" placeholder="e.g. javascript, web-dev">
+                            </div>
+                        </form>
+                        <div class="live-card-preview-container" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                            <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--text-secondary);">Live Preview</h3>
+                            <div id="liveCardPreview" style="max-width: 320px; margin: auto;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="app.closeEditor()">Cancel</button>
+                        <button type="submit" form="cardEditorForm" class="btn btn-primary">Save Card</button>
+                    </div>
+                `;
+            }
+
+            closeEditor() {
+                document.getElementById('editorModal').style.display = 'none';
+                this.currentEditId = null;
+            }
+
+            // ===== WYSIWYG Editor =====
+            createToolbarHTML(targetEditorId) {
+                return `
+                    <div class="wysiwyg-toolbar" role="toolbar">
+                        <button type="button" data-command="bold" title="Bold" aria-label="Bold"><b>B</b></button>
+                        <button type="button" data-command="italic" title="Italic" aria-label="Italic"><i>I</i></button>
+                        <button type="button" data-command="underline" title="Underline" aria-label="Underline"><u>U</u></button>
+                        <button type="button" data-command="insertUnorderedList" title="Bullet List" aria-label="Bullet List">&bull;</button>
+                        <button type="button" data-command="h1" title="Heading 1" aria-label="Heading 1">H1</button>
+                    </div>`;
+            }
+
+            setupWYSIWYG() {
+                document.querySelectorAll('.wysiwyg-toolbar').forEach(toolbar => {
+                    const editorId = toolbar.nextElementSibling.id;
+                    toolbar.querySelectorAll('button').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            const command = e.currentTarget.dataset.command;
+                            this.formatText(editorId, command);
+                        });
+                    });
+                });
+
+                document.querySelectorAll('.wysiwyg-editor').forEach(editor => {
+                    const preview = editor.nextElementSibling;
+
+                    const updateAllPreviews = () => {
+                        if (preview && preview.classList.contains('live-preview')) {
+                            preview.innerHTML = editor.innerHTML;
+                        }
+                        this.updateLiveCardPreview();
+                    };
+
+                    updateAllPreviews(); // Initial sync
+
+                    editor.addEventListener('input', updateAllPreviews);
+                });
+
+                document.getElementById('tagsInput').addEventListener('input', () => this.updateLiveCardPreview());
+                document.querySelectorAll('input[name="template"]').forEach(radio => {
+                    radio.addEventListener('change', () => this.updateLiveCardPreview());
+                });
+            }
+
+            formatText(editorId, command) {
+                const editor = document.getElementById(editorId);
+                editor.focus();
+
+                // Using modern approach instead of execCommand where possible
+                let formatBlock = null;
+                switch (command) {
+                    case 'bold':
+                    case 'italic':
+                    case 'underline':
+                    case 'insertUnorderedList':
+                        document.execCommand(command, false, null); // Still the simplest for these
+                        break;
+                    case 'h1':
+                        formatBlock = 'H1';
+                        break;
+                }
+
+                if (formatBlock) {
+                    document.execCommand('formatBlock', false, formatBlock);
+                }
+            }
+
+            updateLiveCardPreview() {
+                const previewContainer = document.getElementById('liveCardPreview');
+                if (!previewContainer) return;
+
+                const template = document.querySelector('input[name="template"]:checked')?.value || 'basic';
+                const frontContent = document.getElementById('frontEditor')?.innerHTML || '';
+                const backContent = document.getElementById('backEditor')?.innerHTML || '';
+                const tags = document.getElementById('tagsInput')?.value.split(',').map(tag => tag.trim()).filter(Boolean) || [];
+
+                const previewCard = {
+                    id: 'live-preview-card',
+                    template,
+                    frontContent: frontContent || `<span style="opacity: 0.6;">Front content</span>`,
+                    backContent: backContent || `<span style="opacity: 0.6;">Back content</span>`,
+                    tags
+                };
+
+                previewContainer.innerHTML = this.createCardHTML(previewCard, true);
+
+                const cardElement = previewContainer.querySelector('.card');
+                if (cardElement) {
+                    const flipperContainer = cardElement.querySelector('.card-flipper-container');
+                    if (flipperContainer) {
+                        flipperContainer.addEventListener('click', () => {
+                            cardElement.classList.toggle('flipped');
+                        });
+                    }
+                }
+            }
+
+            saveCard(event) {
+                event.preventDefault();
+                const template = document.querySelector('input[name="template"]:checked').value;
+                const frontContent = document.getElementById('frontEditor').innerHTML;
+                const backContent = document.getElementById('backEditor').innerHTML;
+                const tags = document.getElementById('tagsInput').value.split(',').map(tag => tag.trim()).filter(Boolean);
+                const cardData = { template, frontContent, backContent, tags, updatedAt: Date.now() };
+
+                if (this.currentEditId) {
+                    const index = this.cards.findIndex(c => c.id === this.currentEditId);
+                    if (index !== -1) this.cards[index] = { ...this.cards[index], ...cardData };
+                } else {
+                    cardData.id = this.generateId();
+                    cardData.createdAt = Date.now();
+                    this.cards.unshift(cardData);
+                }
+
+                this.saveCards();
+                this.renderCards();
+                this.updateTagFilters();
+                this.closeEditor();
+            }
+
+            // ===== Confirmation Modal =====
+            showConfirm(message, onOk) {
+                const confirmModal = document.getElementById('confirmModal');
+                const msgEl = document.getElementById('confirmMessage');
+                const okBtn = document.getElementById('confirmOk');
+                const cancelBtn = document.getElementById('confirmCancel');
+
+                msgEl.textContent = message;
+                confirmModal.style.display = 'flex';
+
+                const close = () => {
+                    confirmModal.style.display = 'none';
+                    okBtn.replaceWith(okBtn.cloneNode(true)); // Remove listeners
+                    cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+                };
+
+                okBtn.addEventListener('click', () => {
+                    onOk();
+                    close();
+                });
+                cancelBtn.addEventListener('click', close);
+            }
+
+            deleteCard(id) {
+                this.showConfirm('Are you sure you want to delete this card?', () => {
+                    this.cards = this.cards.filter(c => c.id !== id);
+                    this.saveCards();
+                    this.renderCards();
+                    this.updateTagFilters();
+                });
+            }
+
+            // ===== FILTERS & SEARCH =====
+            getFilteredCards() {
+                return this.cards.filter(card => {
+                    const searchTerm = this.activeFilters.searchTerm.toLowerCase();
+                    const searchMatch = !searchTerm ||
+                        card.frontContent.toLowerCase().includes(searchTerm) ||
+                        card.backContent.toLowerCase().includes(searchTerm) ||
+                        card.tags.some(tag => tag.toLowerCase().includes(searchTerm));
+
+                    const tagMatch = this.activeFilters.tags.size === 0 ||
+                        [...this.activeFilters.tags].every(tag => card.tags.includes(tag));
+
+                    return searchMatch && tagMatch;
+                });
+            }
+
+            updateTagFilters() {
+                const allTags = [...new Set(this.cards.flatMap(card => card.tags))].sort();
+                const container = document.getElementById('tagFilterContainer');
+
+                if (allTags.length === 0) {
+                    container.innerHTML = '<p style="color: #aaa; font-size: 0.9rem;">No tags available</p>';
+                    document.getElementById('clearTagFiltersBtn').style.display = 'none';
+                    return;
+                }
+
+                document.getElementById('clearTagFiltersBtn').style.display = this.activeFilters.tags.size > 0 ? 'block' : 'none';
+
+                container.innerHTML = allTags.map(tag => `
+                    <button class="${this.activeFilters.tags.has(tag) ? 'active' : ''}" 
+                            onclick="app.toggleTagFilter('${tag}')"
+                            aria-pressed="${this.activeFilters.tags.has(tag)}">
+                        #${tag}
+                    </button>
+                `).join('');
+            }
+
+            toggleTagFilter(tag) {
+                if (this.activeFilters.tags.has(tag)) {
+                    this.activeFilters.tags.delete(tag);
+                } else {
+                    this.activeFilters.tags.add(tag);
+                }
+                this.renderCards();
+                this.updateTagFilters();
+            }
+
+            // ===== IMPORT/EXPORT =====
+            exportCards() {
+                if (this.cards.length === 0) {
+                    this.showConfirm('There are no cards to export. Continue anyway?', () => { });
+                    return;
+                }
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(this.cards, null, 2));
+                const downloadAnchorNode = document.createElement('a');
+                downloadAnchorNode.setAttribute("href", dataStr);
+                downloadAnchorNode.setAttribute("download", `flashcards-${new Date().toISOString()}.json`);
+                document.body.appendChild(downloadAnchorNode);
+                downloadAnchorNode.click();
+                downloadAnchorNode.remove();
+            }
+
+            handleFileImport(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    try {
+                        const importedCards = JSON.parse(e.target.result);
+                        if (!Array.isArray(importedCards)) throw new Error('Invalid JSON format. The file should contain an array of cards.');
+
+                        const existingIds = new Set(this.cards.map(c => c.id));
+                        const newCards = importedCards.filter(card => card.id && !existingIds.has(card.id));
+
+                        this.cards.unshift(...newCards);
+                        this.saveCards();
+                        this.renderCards();
+                        this.updateTagFilters();
+                        alert(`Successfully imported ${newCards.length} new cards.`);
+                    } catch (error) {
+                        alert('Error importing file: ' + error.message);
+                    }
+                };
+                reader.onerror = () => alert('Failed to read the file.');
+                reader.readAsText(file);
+                event.target.value = '';
+            }
+
+            // ===== EVENT LISTENERS =====
+            setupEventListeners() {
+                document.getElementById('addCardBtn').addEventListener('click', () => this.openEditor());
+                document.getElementById('exportBtn').addEventListener('click', () => this.exportCards());
+                document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importFile').click());
+                document.getElementById('importFile').addEventListener('change', (e) => this.handleFileImport(e));
+                document.getElementById('themeToggleBtn').addEventListener('click', () => {
+                    const newTheme = this.theme === 'dark' ? 'light' : 'dark';
+                    this.setTheme(newTheme);
+                });
+
+                document.getElementById('searchInput').addEventListener('input', (e) => {
+                    this.activeFilters.searchTerm = e.target.value;
+                    this.renderCards();
+                });
+
+                document.getElementById('clearTagFiltersBtn').addEventListener('click', () => {
+                    this.activeFilters.tags.clear();
+                    this.renderCards();
+                    this.updateTagFilters();
+                });
+
+                this.setupDropZoneEventListeners();
+
+                // Close modals on outside click
+                ['editorModal', 'confirmModal'].forEach(id => {
+                    document.getElementById(id).addEventListener('click', (e) => {
+                        if (e.target.id === id) this.closeEditor();
+                    });
+                })
+            }
+
+            setupDropZoneEventListeners() {
+                const editZone = document.getElementById('editDropZone');
+                const deleteZone = document.getElementById('deleteDropZone');
+
+                [editZone, deleteZone].forEach(zone => {
+                    zone.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        zone.classList.add('drag-over');
+                    });
+
+                    zone.addEventListener('dragleave', () => {
+                        zone.classList.remove('drag-over');
+                    });
+
+                    zone.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        zone.classList.remove('drag-over');
+                        const cardId = e.dataTransfer.getData('text/plain');
+                        if (!cardId) return;
+
+                        const action = zone.dataset.action;
+                        if (action === 'edit') {
+                            this.openEditor(cardId);
+                        } else if (action === 'delete') {
+                            this.deleteCard(cardId);
+                        }
+                    });
+                });
+            }
+        }
+
+        // Initialize the app when DOM is loaded
+        let app;
+        document.addEventListener('DOMContentLoaded', () => {
+            app = new FlashcardApp();
+        });
+    </script>
+</body>
+
+</html>
